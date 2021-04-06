@@ -4,7 +4,7 @@ import com.google.protobuf.util.JsonFormat;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.monarchinitiative.ast.exception.LiricalRuntimeException;
+import org.monarchinitiative.ast.exception.AstRuntimeException;
 import org.monarchinitiative.phenol.base.PhenolRuntimeException;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -46,7 +46,7 @@ public class PhenopacketImporter {
         java.io.File tmp = new java.io.File(pathToJsonPhenopacketFile);
         if (! tmp.exists() ) {
             System.err.println("[ERROR] Could not find phenopacket file at " + pathToJsonPhenopacketFile);
-            throw new LiricalRuntimeException("[ERROR] Could not find phenopacket file at " + pathToJsonPhenopacketFile);
+            throw new AstRuntimeException("[ERROR] Could not find phenopacket file at " + pathToJsonPhenopacketFile);
         }
         try {
             Object obj = parser.parse(new FileReader(pathToJsonPhenopacketFile));
@@ -57,10 +57,10 @@ public class PhenopacketImporter {
             Phenopacket phenopacket = phenoPacketBuilder.build();
             return new PhenopacketImporter(phenopacket,ontology);
         } catch (IOException  e1) {
-            throw new LiricalRuntimeException("I/O Error: Could not load phenopacket  (" + pathToJsonPhenopacketFile +"): "+ e1.getMessage());
+            throw new AstRuntimeException("I/O Error: Could not load phenopacket  (" + pathToJsonPhenopacketFile +"): "+ e1.getMessage());
         } catch (ParseException ipbe) {
             System.err.println("[ERROR] Malformed phenopacket: " + ipbe.getMessage());
-            throw new LiricalRuntimeException("Could not load phenopacket (" + pathToJsonPhenopacketFile +"): "+ ipbe.getMessage());
+            throw new AstRuntimeException("Could not load phenopacket (" + pathToJsonPhenopacketFile +"): "+ ipbe.getMessage());
         }
     }
 

@@ -1,4 +1,5 @@
 package org.monarchinitiative.ast;
+import org.monarchinitiative.ast.cmd.AssessSufficiencyCommand;
 import org.monarchinitiative.ast.cmd.DownloadCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,8 @@ public class Ast implements Callable<Integer> {
         }
         long startTime = System.currentTimeMillis();
         CommandLine cline = new CommandLine(new Ast())
-                //.addSubcommand("background", new BackgroundFrequencyCommand())
-                .addSubcommand("download", new DownloadCommand());
-                //.addSubcommand("yaml", new YamlCommand());
+                .addSubcommand("download", new DownloadCommand())
+                .addSubcommand("assess", new AssessSufficiencyCommand());
         cline.setToggleBooleanFlags(false);
         int exitCode = cline.execute(args);
         long stopTime = System.currentTimeMillis();
