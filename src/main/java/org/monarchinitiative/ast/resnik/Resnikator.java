@@ -26,6 +26,7 @@ public class Resnikator {
     private final Map<TermId, Double> termToIc;
     private final Map<TermId, Collection<TermId>> diseaseIdToTermIds;
 
+
     public Resnikator(String hpoPath, String hpoaPath) {
         Instant t1 = Instant.now();
         File hpoFile = new File(hpoPath);
@@ -40,7 +41,7 @@ public class Resnikator {
         this.diseaseMap = HpoDiseaseAnnotationParser.loadDiseaseMap(hpoaPath, hpo,databases);
         t2 = Instant.now();
         LOGGER.trace(String.format("Loaded phenotype.hpoa in %.3f seconds.\n",Duration.between(t1,t2).toMillis()/1000d));
-        // Compute list of annoations and mapping from OMIM ID to term IDs.
+        // Compute list of annotations and mapping from OMIM ID to term IDs.
         t1 = Instant.now();
         this.diseaseIdToTermIds = new HashMap<>();
         final Map<TermId, Collection<TermId>> termIdToDiseaseIds = new HashMap<>();

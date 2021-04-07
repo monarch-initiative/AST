@@ -31,7 +31,7 @@ public class AssessSufficiencyCommand implements Callable<Integer> {
         Resnikator resnikator = new Resnikator(hpoPath, hpoaPath);
         final Ontology hpo = resnikator.getHpo();
         PhenopacketImporter importer = PhenopacketImporter.fromJson(phenopacketPath, hpo);
-        SimpleSufficiencyTool sufficiency = new SimpleSufficiencyTool(importer.getHpoTerms(), importer.getNegatedHpoTerms());
+        SimpleSufficiencyTool sufficiency = new SimpleSufficiencyTool(importer.getHpoTerms(), importer.getNegatedHpoTerms(), resnikator);
 
 
         return 0;

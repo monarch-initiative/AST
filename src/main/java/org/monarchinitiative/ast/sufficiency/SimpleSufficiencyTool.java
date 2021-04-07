@@ -1,5 +1,6 @@
 package org.monarchinitiative.ast.sufficiency;
 
+import org.monarchinitiative.ast.resnik.Resnikator;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,15 @@ public class SimpleSufficiencyTool {
      * List of excluded HPO terms in the subject.
      */
     private List<TermId> negatedHpoIdList;
-    public SimpleSufficiencyTool(List<TermId> hpoIdList, List<TermId> excludedHpoIdList) {
+
+
+    private final Resnikator resnikator;
+
+    public SimpleSufficiencyTool(List<TermId> hpoIdList, List<TermId> excludedHpoIdList, Resnikator resnikator) {
         this.hpoIdList = hpoIdList;
         this.negatedHpoIdList = excludedHpoIdList;
         LOGGER.trace("HPO Terms: {}", this.hpoIdList.size());
         LOGGER.trace("Excluded HPO Terms: {}", this.negatedHpoIdList.size());
+        this.resnikator = resnikator;
     }
 }
