@@ -13,11 +13,11 @@ public class SimpleSufficiencyTool {
     /**
      * List of HPO terms observed in the subject of the investigation.
      */
-    private List<TermId> hpoIdList;
+    private final List<TermId> hpoIdList;
     /**
      * List of excluded HPO terms in the subject.
      */
-    private List<TermId> negatedHpoIdList;
+    private final List<TermId> negatedHpoIdList;
 
     private final String phenopacket;
     private final SimpleScoreCalculator resnikator;

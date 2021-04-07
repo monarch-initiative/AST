@@ -2,14 +2,12 @@ package org.monarchinitiative.ast.resnik;
 
 import org.monarchinitiative.ast.cmd.AssessSufficiencyCommand;
 import org.monarchinitiative.ast.exception.AstRuntimeException;
-import org.monarchinitiative.phenol.annotations.assoc.HpoAssociationParser;
 import org.monarchinitiative.phenol.annotations.formats.hpo.HpoDisease;
 import org.monarchinitiative.phenol.annotations.obo.hpo.HpoDiseaseAnnotationParser;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.phenol.ontology.data.TermIds;
-import org.monarchinitiative.phenol.ontology.similarity.HpoResnikSimilarity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +20,6 @@ public class SimpleScoreCalculator {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssessSufficiencyCommand.class);
     private final Ontology hpo;
     private final Map<TermId, HpoDisease> diseaseMap;
-    //private HpoResnikSimilarity resnikSimilarity;
     private final Map<TermId, Double> termToIc;
     private final Map<TermId, Collection<TermId>> diseaseIdToTermIds;
     /** The mean sum of Ics of terms across all diseases. */
@@ -56,7 +53,7 @@ public class SimpleScoreCalculator {
             HpoDisease disease = diseaseMap.get(diseaseId);
             List<TermId> hpoTerms = disease.getPhenotypicAbnormalityTermIdList();
             diseaseIdToTermIds.putIfAbsent(diseaseId, new HashSet<>());
-            // add term anscestors
+            // add term ancestors
             final Set<TermId> inclAncestorTermIds = TermIds.augmentWithAncestors(hpo, new HashSet(hpoTerms), true);
 
             for (TermId tid : inclAncestorTermIds) {
@@ -77,14 +74,6 @@ public class SimpleScoreCalculator {
             double ic = -1*Math.log((double)annotatedCount/totalPopulationHpoTerms);
             termToIc.put(tid, ic);
         }
-       /* t2 = Instant.now();
-        System.out.printf("[INFO] Calculated information content in %.3f seconds.\n",Duration.between(t1,t2).toMillis()/1000d);
-        t1 = Instant.now();
-        this.resnikSimilarity = new HpoResnikSimilarity(this.hpo, this.termToIc);
-        t2 = Instant.now();
-        System.out.printf("[INFO] Calculated pairwise Resnik similarity in %.3f seconds.\n",Duration.between(t1,t2).toMillis()/1000d);
-        */
-
         this.meanSumIc = calculateMeanSumIc();
         this.meanMaxIc = calculateMeanMaxIc();
         this.meanMeanIc = calculateMeanMeanIc();
@@ -143,7 +132,4 @@ public class SimpleScoreCalculator {
         return hpo;
     }
 
-//    public HpoResnikSimilarity getResnikSimilarity() {
-//        return resnikSimilarity;
-//    }
 }

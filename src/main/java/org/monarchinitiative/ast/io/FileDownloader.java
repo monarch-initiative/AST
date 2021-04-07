@@ -154,8 +154,6 @@ public class FileDownloader {
             out.close();
             if (pb != null && pos != pb.getMax())
                 pb.print(fileSize);
-            // if (!ftp.completePendingCommand())
-            // throw new IOException("Could not finish download!");
 
         } catch (FileNotFoundException e) {
             dest.delete();

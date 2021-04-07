@@ -4,7 +4,6 @@ import org.monarchinitiative.ast.io.PhenopacketImporter;
 import org.monarchinitiative.ast.resnik.SimpleScoreCalculator;
 import org.monarchinitiative.ast.sufficiency.SimpleSufficiencyTool;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -13,7 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "assess", aliases = {"A"},
