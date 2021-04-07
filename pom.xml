@@ -4,7 +4,7 @@
   <groupId>org.monarchinitiative.ast</groupId>
   <artifactId>ast</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <name>ast</name>
   <url>https://github.com/monarch-initiative/AST</url>
 

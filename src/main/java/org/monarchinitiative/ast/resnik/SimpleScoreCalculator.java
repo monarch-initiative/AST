@@ -18,16 +18,23 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-public class Resnikator {
+public class SimpleScoreCalculator {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssessSufficiencyCommand.class);
     private final Ontology hpo;
     private final Map<TermId, HpoDisease> diseaseMap;
-    private HpoResnikSimilarity resnikSimilarity;
+    //private HpoResnikSimilarity resnikSimilarity;
     private final Map<TermId, Double> termToIc;
     private final Map<TermId, Collection<TermId>> diseaseIdToTermIds;
+    /** The mean sum of Ics of terms across all diseases. */
+    private final double meanSumIc;
+    /** The mean maximum of Ics of terms across all diseases. */
+    private final double meanMaxIc;
+    /** The mean average of Ics of terms across all diseases. */
+    private final double meanMeanIc;
 
+    private final double NEGATION_WEIGHT = 0.25;
 
-    public Resnikator(String hpoPath, String hpoaPath) {
+    public SimpleScoreCalculator(String hpoPath, String hpoaPath) {
         Instant t1 = Instant.now();
         File hpoFile = new File(hpoPath);
         if (! hpoFile.isFile()) {
@@ -70,20 +77,73 @@ public class Resnikator {
             double ic = -1*Math.log((double)annotatedCount/totalPopulationHpoTerms);
             termToIc.put(tid, ic);
         }
-        t2 = Instant.now();
+       /* t2 = Instant.now();
         System.out.printf("[INFO] Calculated information content in %.3f seconds.\n",Duration.between(t1,t2).toMillis()/1000d);
         t1 = Instant.now();
         this.resnikSimilarity = new HpoResnikSimilarity(this.hpo, this.termToIc);
         t2 = Instant.now();
         System.out.printf("[INFO] Calculated pairwise Resnik similarity in %.3f seconds.\n",Duration.between(t1,t2).toMillis()/1000d);
+        */
+
+        this.meanSumIc = calculateMeanSumIc();
+        this.meanMaxIc = calculateMeanMaxIc();
+        this.meanMeanIc = calculateMeanMeanIc();
     }
+
+
+    private double calculateMeanSumIc() {
+        double sumIcs = 0;
+        for (Collection<TermId> terms : this.diseaseIdToTermIds.values()) {
+            double sumIc = terms.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).sum();
+            sumIcs += sumIc;
+        }
+        return sumIcs / this.diseaseIdToTermIds.size();
+    }
+
+    private double calculateMeanMaxIc() {
+        double maxIcs = 0;
+        for (Collection<TermId> terms : this.diseaseIdToTermIds.values()) {
+            double maxIc = terms.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).max().orElse(0);
+            maxIcs += maxIc;
+        }
+        return maxIcs / this.diseaseIdToTermIds.size();
+    }
+
+    private double calculateMeanMeanIc() {
+        double meanIcs = 0;
+        for (Collection<TermId> terms : this.diseaseIdToTermIds.values()) {
+            double aveIc = terms.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).average().orElse(0);
+            meanIcs += aveIc;
+        }
+        return meanIcs / this.diseaseIdToTermIds.size();
+    }
+
+
+    public double calculateSimpleScore(List<TermId> annotations, List<TermId> excludedAnnotations) {
+        double ONE_THIRD = 1.0/3.0;
+        double sumIc = annotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).sum();
+        double maxIc = annotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).max().orElse(0);
+        double aveIc = annotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).average().orElse(0);
+        if (!excludedAnnotations.isEmpty()) {
+            double sumIcExcl = excludedAnnotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).sum();
+            double maxIcExcl = excludedAnnotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).max().orElse(0);
+            double aveIcExcl = excludedAnnotations.stream().mapToDouble(t -> this.termToIc.getOrDefault(t,0d)).average().orElse(0);
+            sumIc = (1-NEGATION_WEIGHT)*sumIc + NEGATION_WEIGHT* sumIcExcl;
+            maxIc = (1-NEGATION_WEIGHT)*sumIc + NEGATION_WEIGHT*maxIcExcl;
+            aveIc = (1-NEGATION_WEIGHT)*sumIc + NEGATION_WEIGHT*aveIcExcl;
+        }
+        return ONE_THIRD * sumIc/this.meanSumIc + ONE_THIRD * maxIc/this.meanMaxIc + ONE_THIRD * aveIc/this.meanMeanIc;
+    }
+
+
+
 
 
     public Ontology getHpo() {
         return hpo;
     }
 
-    public HpoResnikSimilarity getResnikSimilarity() {
-        return resnikSimilarity;
-    }
+//    public HpoResnikSimilarity getResnikSimilarity() {
+//        return resnikSimilarity;
+//    }
 }
