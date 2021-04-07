@@ -78,10 +78,20 @@ We can run the tool across the entire directory
 .. code-block:: bash
 
     java -jar target/AnnotationSufficiencyTool.jar assess -p examplePhenopackets/
-    Dorboz-2017-NKX6-2-Patient_4_II-1.json  94.2%
-    Dougherty-2016-NPC1-The_proband.json    142.6%
-    Ekvall-2015-NRAS-case_1.json    89.2%
-    Dorboz-2017-NKX6-2-Patient_3_II-3.json  103.1%
-    Du-2018-TINF2-proband.json      417.9%
+    Dorboz-2017-NKX6-2-Patient_4_II-1.json  0.9
+    Dougherty-2016-NPC1-The_proband.json    1.4
+    Ekvall-2015-NRAS-case_1.json    0.9
+    Dorboz-2017-NKX6-2-Patient_3_II-3.json  10.0
+    Du-2018-TINF2-proband.json      4.2
 
 Again, these results are also written to the output file.
+
+
+Interpretation
+##############
+
+An annotation score of 1.0 means that the query terms have the same breadth and depth as (on average) the terms used to annotated
+diseases in the HPO database do. A score of 0.9 means the query terms are 90% as good, and a score of 4.2 means that the query terms
+are better.
+
+This is a first approximation to a tool that will provide feedback on query terms.

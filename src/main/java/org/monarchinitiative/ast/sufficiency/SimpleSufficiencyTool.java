@@ -34,6 +34,6 @@ public class SimpleSufficiencyTool {
 
     public String analyze() {
         double score = resnikator.calculateSimpleScore(this.hpoIdList, this.negatedHpoIdList);
-        return String.format("%s\t%.1f%%",this.phenopacket, 100*score);
+        return String.format("%s\t%.1f",this.phenopacket, score);
     }
 }

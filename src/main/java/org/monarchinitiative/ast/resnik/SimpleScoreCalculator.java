@@ -64,10 +64,8 @@ public class SimpleScoreCalculator {
         }
         t2 = Instant.now();
         LOGGER.trace(String.format("Calculated gene-disease links in %.3f seconds.\n", Duration.between(t1,t2).toMillis()/1000d));
-        t1 = Instant.now();
         TermId ROOT_HPO = TermId.of("HP:0000118");//Phenotypic abnormality
         int totalPopulationHpoTerms = termIdToDiseaseIds.get(ROOT_HPO).size();
-        t1 = Instant.now();
         termToIc = new HashMap<>();
         for (TermId tid : termIdToDiseaseIds.keySet()) {
             int annotatedCount = termIdToDiseaseIds.get(tid).size();
