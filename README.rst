@@ -51,5 +51,37 @@ Run the tool as follows
 
 .. code-block:: bash
 
-    java -jar target/AnnotationSufficiencyTool.jar assess -p my-phenopacket.json
+    java -jar target/AnnotationSufficiencyTool.jar assess -p <path>
 
+Here, ``<path>`` can be the path to either a single phenopacket or to a directory that contains phenopackets.
+
+Examples
+########
+
+We have provided some example phenopackets to make it easier to try out the tool. For convenience,
+we leave the application in the target directory that is created by maven.
+
+.. code-block:: bash
+
+    java -jar target/AnnotationSufficiencyTool.jar assess -p examplePhenopackets/Dorboz-2017-NKX6-2-Patient_3_II-3.json
+    Dorboz-2017-NKX6-2-Patient_3_II-3.json  103.1%
+
+This creates an output file ``AST.tsv`` (change the outfile name with the ``-o`` flag).
+
+.. code-block:: bash
+
+    cat AST.tsv
+    Dorboz-2017-NKX6-2-Patient_3_II-3.json  103.1%
+
+We can run the tool across the entire directory
+
+.. code-block:: bash
+
+    java -jar target/AnnotationSufficiencyTool.jar assess -p examplePhenopackets/
+    Dorboz-2017-NKX6-2-Patient_4_II-1.json  94.2%
+    Dougherty-2016-NPC1-The_proband.json    142.6%
+    Ekvall-2015-NRAS-case_1.json    89.2%
+    Dorboz-2017-NKX6-2-Patient_3_II-3.json  103.1%
+    Du-2018-TINF2-proband.json      417.9%
+
+Again, these results are also written to the output file.
